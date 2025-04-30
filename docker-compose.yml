@@ -1,0 +1,19 @@
+networks:
+    backend:
+services:
+    laravel:
+        container_name: '${APP_NAME}-laravel'
+        build:
+            context: .
+            dockerfile: .docker/Dockerfile
+        volumes:
+            - ./storage:/var/www/html/storage
+            - ./secrets:/var/www/html/secrets
+            - ./.env:/var/www/html/.env
+            - ./database/database.sqlite:/var/www/html/database/database.sqlite
+        ports:
+            - "9000:9000"
+        hostname: laravel
+        networks:
+            backend:
+        restart: unless-stopped
