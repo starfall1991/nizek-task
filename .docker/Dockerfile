@@ -86,7 +86,6 @@ COPY ./.docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY ./.docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY ./.docker/supervisord.conf /etc/supervisor/conf.d/
 
-
 RUN chmod 777 /usr/local/bin/entrypoint.sh
 RUN cat ./.docker/utilities.sh >> ~/.bashrc
 
