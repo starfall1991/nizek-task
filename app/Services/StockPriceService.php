@@ -21,7 +21,7 @@ final class StockPriceService
      */
     public function getStatistics(): array
     {
-        return Cache::remember(CacheKeyEnum::STOCK_PRICE_STATISTICS->value, now()->endOfDay(), static function () {
+        $result = Cache::remember(CacheKeyEnum::STOCK_PRICE_STATISTICS->value, now()->endOfDay(), static function () {
             $recentRecord = StockPrice::query()
                 ->orderBy('date', 'desc')
                 ->first(['date', 'price']);
@@ -61,6 +61,13 @@ final class StockPriceService
             $result['MAX'] = (string) ((($recentRecord->price / $oldestRecord->price) - 1) * 100);
             return $result;
         });
+
+        // if the result is not complete try to get them again
+        if (count($result) != 10) {
+            Cache::forget(CacheKeyEnum::STOCK_PRICE_STATISTICS->value);
+        }
+
+        return $result;
     }
 
     public function getCustomStatistic(Carbon $start, Carbon $end): ?StatisticDTO
